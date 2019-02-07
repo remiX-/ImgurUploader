@@ -1,0 +1,123 @@
+﻿<Controls:MetroWindow
+		xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+		xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+		xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+		xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+		xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
+		xmlns:local="clr-namespace:ImgurUploader" x:Class="ImgurUploader.MainWindow"
+		mc:Ignorable="d"
+		Title="Imgur Uploader" Icon="Resources/icon.ico"
+		Width="1024" Height="576" MinWidth="1024" MinHeight="576"
+		Loaded="Window_Loaded" Drop="Window_Drop" DragEnter="Window_DragEnter"
+		WindowStartupLocation="CenterScreen"
+		Style="{StaticResource MetroWindow}">
+	<Controls:MetroWindow.DataContext>
+		<local:MainViewModel/>
+	</Controls:MetroWindow.DataContext>
+	<Grid Margin="10">
+		<Grid.RowDefinitions>
+			<RowDefinition Height="Auto" />
+			<RowDefinition Height="5" />
+			<RowDefinition />
+			<RowDefinition Height="10" />
+			<RowDefinition Height="Auto" />
+		</Grid.RowDefinitions>
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition />
+			<ColumnDefinition Width="5" />
+			<ColumnDefinition />
+		</Grid.ColumnDefinitions>
+
+		<GroupBox Grid.Row="0" Grid.Column="0" Header="Imgur Account" Height="Auto" Padding="5">
+			<Grid>
+				<Grid.RowDefinitions>
+					<RowDefinition />
+					<RowDefinition Height="5" />
+					<RowDefinition />
+					<RowDefinition Height="5" />
+					<RowDefinition />
+				</Grid.RowDefinitions>
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="100" />
+					<ColumnDefinition />
+				</Grid.ColumnDefinitions>
+
+				<Label Grid.Row="0" Grid.Column="0" Content="Account Name" />
+				<Label Grid.Row="0" Grid.Column="1" Content="{Binding AccountName}" />
+
+				<Label Grid.Row="2" Grid.Column="0" Content="Pin" />
+				<TextBox x:Name="txt_Pin" Grid.Row="2" Grid.Column="1" Text="{Binding AccountPin}" IsEnabled="false" />
+
+				<Label Grid.Row="4" Grid.Column="1" Content="{Binding Status}" Foreground="{Binding StatusColour}" />
+
+				<Button Grid.Row="4" Grid.Column="1" Content="{Binding RequestText}" Click="btn_Request_Click" HorizontalAlignment="Right" />
+			</Grid>
+		</GroupBox>
+
+		<GroupBox Grid.Row="0" Grid.Column="2" Header="Settings" Height="Auto">
+			<Grid>
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition />
+					<ColumnDefinition />
+				</Grid.ColumnDefinitions>
+
+				<StackPanel Grid.Row="0" Grid.Column="0">
+					<CheckBox x:Name="cb_Anon" Content="Anonymous Upload" Checked="cb_Anon_Checked" Unchecked="cb_Anon_Checked" />
+					<CheckBox x:Name="cb_DarkTheme" Content="Dark Theme" IsChecked="True" Margin="0 5 0 0" Checked="cb_DarkTheme_Checked" Unchecked="cb_DarkTheme_Checked" />
+				</StackPanel>
+			</Grid>
+		</GroupBox>
+
+		<DataGrid Grid.Row="2" Grid.Column="0" x:Name="DG_ToUpload" ItemsSource="{Binding Uploads}">
+			<DataGrid.Resources>
+				<ContextMenu x:Key="cm_DataGridRow">
+					<MenuItem Header="Remove" Click="MenuItem_Remove_Click" />
+				</ContextMenu>
+
+				<Style TargetType="{x:Type DataGridCell}" BasedOn="{StaticResource MetroDataGridCell}">
+					<Setter Property="ContextMenu" Value="{StaticResource cm_DataGridRow}" />
+				</Style>
+			</DataGrid.Resources>
+			<DataGrid.Columns>
+				<DataGridTextColumn Binding="{Binding FileName}" Width="100" Header="File Name" />
+				<DataGridTextColumn Binding="{Binding LocalPath}" Width="150" Header="Local Path" />
+				<DataGridTextColumn Binding="{Binding FileSize}" Width="70" Header="Size (Kb)" />
+			</DataGrid.Columns>
+		</DataGrid>
+
+		<DataGrid Grid.Row="2" Grid.Column="2" x:Name="DG_Complete" ItemsSource="{Binding CompleteUploads}">
+			<DataGrid.Resources>
+				<ContextMenu x:Key="cm_DataGridRow">
+					<MenuItem Header="Remove" Click="MenuItem_Remove_Click" />
+				</ContextMenu>
+
+				<Style TargetType="{x:Type DataGridCell}" BasedOn="{StaticResource MetroDataGridCell}">
+					<Setter Property="ContextMenu" Value="{StaticResource cm_DataGridRow}" />
+				</Style>
+			</DataGrid.Resources>
+			<DataGrid.Columns>
+				<DataGridTextColumn Binding="{Binding Id}" Width="60" Header="ID" />
+				<DataGridTextColumn Binding="{Binding FileName}" Width="100" Header="File Name" />
+				<DataGridTextColumn Binding="{Binding UploadedDateTime}" Width="100" Header="File Name" />
+				<DataGridTextColumn Binding="{Binding FileSize}" Width="70" Header="Size (Kb)" />
+				<DataGridHyperlinkColumn Binding="{Binding Link}" Width="150" Header="Link"  />
+			</DataGrid.Columns>
+		</DataGrid>
+
+		<Grid Grid.Row="4" Grid.Column="0">
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="125" />
+				<ColumnDefinition />
+			</Grid.ColumnDefinitions>
+
+			<Label Grid.Column="0" x:Name="lbl_Status" Content="" />
+			<ProgressBar Grid.Column="1" x:Name="pb_Progress" Value="0" Margin="10 0 0 0" Height="Auto" />
+		</Grid>
+
+		<StackPanel Grid.Row="4" Grid.Column="3" Orientation="Horizontal" HorizontalAlignment="Right">
+			<Button x:Name="btn_SelectImages" Content="Select Images" Click="btn_SelectImages_Click" />
+
+			<Button x:Name="btn_Upload" Content="Start Upload" Margin="10 0 0 0" IsEnabled="False" Click="btn_Upload_Click" />
+		</StackPanel>
+	</Grid>
+</Controls:MetroWindow>
